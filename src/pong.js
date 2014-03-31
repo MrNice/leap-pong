@@ -46,9 +46,9 @@ var camera,
     var createRenderWorld = function() {
       scene = new THREE.Scene();
 
-      light = new THREE.PointLight(0xffffff, 1);
-      light.position.set(1, 1, 1.3);
-      scene.add(light);
+      var directionalLight = new THREE.DirectionalLight( 0xffffff, 0.8 );
+      directionalLight.position.set( 0, 1, 5 );
+      scene.add( directionalLight );
 
       // Meshes for paddles, ball, and walls
       playerMesh = createPaddle(playerDims, playerColor);
@@ -59,11 +59,9 @@ var camera,
       scene.add(cpuMesh);
       scene.add(ballMesh);
 
-      var ambientLight = new THREE.AmbientLight( Math.random() * 0x10 );
-      scene.add( ambientLight );
-
       camera = new THREE.CombinedCamera( window.innerWidth / 2, window.innerHeight / 2, 70, 1, 10, - 5, 10); // TODO: Fix this
       camera.position.set(1, 1, 4);
+      camera.toOrthographic();
       scene.add(camera);
 
     };
@@ -99,11 +97,14 @@ var camera,
           break;
       }
 
+      // Keep the game loop going
       requestAnimationFrame(gameLoop);
     };
 
     var onResize = function() {
-
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      camera.aspect = window.innerWidth/window.innerHeight;
+      camera.updateProjectionMatrix();
     };
 
     var onMoveKey = function(axis) {
@@ -133,6 +134,8 @@ var camera,
 
       // Input Event Bindings
       KeyboardJS.bind.axis('up', 'down', onMoveKey);
+      $(window).resize(onResize);
 
+      // Start the game loop
       requestAnimationFrame(gameLoop);
     });
