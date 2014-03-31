@@ -10,27 +10,32 @@ var camera,
     ballMesh,
     playerMesh,
     cpuMesh,
+    light,
     // Game state
     gameState   = 'initialize',
     ballRadius  = 0.25,
-    playerDims  = [0.3, 1.2],
-    cpuDims     = [0.3, 1.2],
+    playerDims  = [0.3, 1.2, 0.6],
+    cpuDims     = [0.3, 1.2, 0.6],
+    wallDims    = [6, 7.2, 0.6, 0.3], // Width*20, Height*6, Depth, width
+    playerColor = 0xbbbbcc,
+    cpuColor    = 0xbbbbcc,
+    ballColor   = 0xffffff,
     paddleSpeed = undefined, // TODO: Calibrate this :D
     ballSpeedX  = undefined, // TODO: Calibrate this
     ballSpeedY  = undefined, // TODO: Calibrate this
     level       = 1,
     // Textures
 
-    // Box2d shortcuts
-    b2World        = Box2d.Dynamics.b2World,
-    b2FixtureDef   = Box2d.Dynamics.b2FixtureDef,
+    // Box2D shortcuts
+    b2World        = Box2D.Dynamics.b2World,
+    b2FixtureDef   = Box2D.Dynamics.b2FixtureDef,
     b2BodyDef      = Box2D.Dynamics.b2BodyDef,
     b2Body         = Box2D.Dynamics.b2Body,
     b2CircleShape  = Box2D.Collision.Shapes.b2CircleShape,
     b2PolygonShape = Box2D.Collision.Shapes.b2PolygonShape,
     b2Settings     = Box2D.Common.b2Settings,
     b2Vec2         = Box2D.Common.Math.b2Vec2,
-    // Box2d world variables
+    // Box2D world variables
     wWorld,
     wBall;
 
@@ -39,6 +44,27 @@ var camera,
     };
 
     var createRenderWorld = function() {
+      scene = new THREE.Scene();
+
+      light = new THREE.PointLight(0xffffff, 1);
+      light.position.set(1, 1, 1.3);
+      scene.add(light);
+
+      // Meshes for paddles, ball, and walls
+      playerMesh = createPaddle(playerDims, playerColor);
+      cpuMesh = createPaddle(cpuDims, cpuColor);
+      ballMesh = createBall(ballRadius, 32, 32, ballColor);
+      wallsMesh = createWalls(wallDims[0], wallDims[1], wallDims[2], wallDims[3])
+      scene.add(playerMesh);
+      scene.add(cpuMesh);
+      scene.add(ballMesh);
+
+      var ambientLight = new THREE.AmbientLight( Math.random() * 0x10 );
+      scene.add( ambientLight );
+
+      camera = new THREE.CombinedCamera( window.innerWidth / 2, window.innerHeight / 2, 70, 1, 10, - 5, 10); // TODO: Fix this
+      camera.position.set(1, 1, 4);
+      scene.add(camera);
 
     };
 
@@ -61,14 +87,19 @@ var camera,
           createPhysicsWorld();
           createRenderWorld();
           camera.position.set(1, 1, 5);
+          gameState = 'play';
           break;
 
         case 'play':
+          updateRenderWorld();
+          renderer.render(scene, camera);
           break;
 
         case 'levelUp':
           break;
       }
+
+      requestAnimationFrame(gameLoop);
     };
 
     var onResize = function() {
