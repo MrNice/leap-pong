@@ -59,12 +59,12 @@ var createWorld = function() {
   scene.add(bottomMesh);
 
   // Lights
-  var directionalLight = new THREE.DirectionalLight( 0xffffff, 1 );
+  var directionalLight = new THREE.DirectionalLight( 0xffffff, .9 );
   directionalLight.position.set( 0, 0, 10 );
   scene.add( directionalLight );
 
-  var ballLight = new THREE.PointLight( 0xffffff, 1, 1000 );
-  ballLight.position.set(0, 0, 4);
+  var ballLight = new THREE.PointLight( 0x3333ff, 1, 1000 );
+  ballLight.position.set(0, 0, 3);
   scene.add( ballLight );
 
   // Camera
