@@ -23,6 +23,7 @@ var camera,
     cpuMesh,
     topMesh,
     bottomMesh,
+    backgroundMesh,
     ballLight,
     playerStart = [-7, 0],
     cpuStart    = [7, 0],
@@ -32,6 +33,7 @@ var camera,
     gameDims    = [20, 10], // Width & Height
     cameraMod   = 57,
     gameState   = 'initialize',
+    cpuDisabled = true,
     // ballRadius  = 0.25, // Perfect
     ballRadius = 0.35,
     playerDims  = [0.3, 1.2, 0.4], // Same as cpu for now
@@ -77,7 +79,7 @@ var createWorld = function() {
   scene.add(bottomMesh);
 
   // Lights
-  var directionalLight = new THREE.DirectionalLight( 0xffffff, .9 );
+  var directionalLight = new THREE.DirectionalLight( 0xffffff, 0.6 );
   directionalLight.position.set( 0, 0, 10 );
   scene.add( directionalLight );
 
@@ -85,11 +87,32 @@ var createWorld = function() {
   ballLight.position.set(0, 0, 3);
   scene.add( ballLight );
 
+  var spotLight = new THREE.SpotLight( 0xffffff, 5 );
+  spotLight.castShadow = true;
+  spotLight.shadowMapWidth = 10;
+  spotLight.shadowMapHeight = 10;
+  spotLight.shadowCameraNear = 20;
+  spotLight.shadowCameraFar = 100;
+  spotLight.shadowCameraFov = 70;
+  spotLight.position.set( -10, 10, 0 );
+  spotLight.rotation.set(Math.PI/6, Math.PI/6, 0);
+  scene.add( spotLight );
+  spotLight = new THREE.SpotLight( 0xffffff, 5 );
+  spotLight.castShadow = true;
+  spotLight.shadowMapWidth = 10;
+  spotLight.shadowMapHeight = 10;
+  spotLight.shadowCameraNear = 20;
+  spotLight.shadowCameraFar = 100;
+  spotLight.shadowCameraFov = 70;
+  spotLight.position.set( 10, -10, 0 );
+  spotLight.rotation.set(-Math.PI/6, -Math.PI/6, 0);
+  scene.add( spotLight );
+
   // Camera
   camera = new THREE.CombinedCamera(gameDims[0] * cameraMod,
                                     gameDims[1] * cameraMod,
                                     70,
-                                    1, 20,
+                                    1, 25,
                                     -10, 20); // TODO: Fix this
 
   camera.position.set(0, 0, 10);
@@ -97,7 +120,8 @@ var createWorld = function() {
   camera.toOrthographic();
 
   // Action
-  createBackground();
+  backgroundMesh = createBackground();
+  scene.add(backgroundMesh);
   scene.add(camera);
 
 };
@@ -108,9 +132,7 @@ var updateWorld = function() {
   moveCpu();
   ballMesh.position.x += ballSpeedX;
   ballMesh.position.y += ballSpeedY;
-  ballMesh.rotation.x += ballRotationX;
-  ballMesh.rotation.y += ballRotationY;
-  ballMesh.rotation.z += ballRotationZ;
+  rotateBall();
 };
 
 var gameLoop = function() { // TODO FINISH THIS
@@ -148,6 +170,7 @@ var gameLoop = function() { // TODO FINISH THIS
       if(level === 2) {
         level = 1;
         // transitionToPerspective();
+        ballMesh.rotation.set(0, -(Math.PI/2), 0);
         camera.toOrthographic();
       } else if(level === 3){
         level = 2;

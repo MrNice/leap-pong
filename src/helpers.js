@@ -1,5 +1,5 @@
 var createWallMesh = function(coords) {
-  var wall = new THREE.Mesh(new THREE.CubeGeometry(gameDims[0] - 3, 0.4, 0.4),
+  var wall = new THREE.Mesh(new THREE.CubeGeometry(gameDims[0] - 3, 0.4, 5),
          new THREE.MeshLambertMaterial({color: 0x666666}));
 
   wall.position.set(coords[0], coords[1], -0.5);
@@ -16,7 +16,7 @@ var createPaddleMesh = function(sizeArray, color, coords) {
 
 var createBallMesh = function(radius, vertslices, horizslices, color) {
   var g = new THREE.SphereGeometry(radius, vertslices, horizslices);
-  var ball = new THREE.Mesh(g, new THREE.MeshPhongMaterial({map: ballTexture}));
+  var ball = new THREE.Mesh(g, new THREE.MeshBasicMaterial({map: ballTexture}));
   ball.position.set(0,0,0);
   ball.rotation.set(0, -(Math.PI/2), 0);
   return ball;
@@ -27,7 +27,11 @@ var createBackground = function() {
          new THREE.MeshLambertMaterial({color: 0xffffff}));
   plane.position.set(0, 0, -1);
   plane.rotation.set(0, 0, 0);
-  scene.add(plane);
+  return plane;
+};
+
+var toggleBackgound = function() {
+  plane.position.set(0, 0, 11);
 };
 
 var onMoveKey = function(axis) {
@@ -85,6 +89,7 @@ var movePlayer = function() {
 };
 
 var moveCpu = function() {
+  if(cpuDisabled) return;
   if(ballMesh.position.x > 2 && ballSpeedX > 0) {
     if(cpuMesh.position.y < 4 && ballMesh.position.y > cpuMesh.position.y){
       cpuMesh.position.y += cpuSpeed;
@@ -126,5 +131,13 @@ var checkCollisions = function() {
     }
     ballSpeedX *= -1;
     ballRotationY *= -1;
+  }
+};
+
+var rotateBall = function() {
+  if(level !== 1) {
+    ballMesh.rotation.x += ballRotationX;
+    ballMesh.rotation.y += ballRotationY;
+    ballMesh.rotation.z += ballRotationZ;
   }
 };
