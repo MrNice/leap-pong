@@ -28,8 +28,8 @@ var camera,
     playerDims  = [0.3, 1.2, 0.6], // Same as cpu for now
     cpuDims     = [0.3, 1.2, 0.6], // Same as player for now
     wallDims    = [7, 10, 1, 0.3], // Autocadded for basic feel
-    playerColor = 0xbbbbcc,
-    cpuColor    = 0xbbbbcc,
+    playerColor = 0x0055ff,
+    cpuColor    = 0xffcc33,
     ballColor   = 0xffffff,
     paddleSpeed = undefined, // TODO: Calibrate this :D
     ballSpeedX  = undefined, // TODO: Calibrate this
@@ -79,8 +79,8 @@ var camera,
       scene.add(ballMesh);
 
       // Lights
-      var directionalLight = new THREE.DirectionalLight( 0xffffff, 0.8 );
-      directionalLight.position.set( 0, 1, 5 );
+      var directionalLight = new THREE.DirectionalLight( 0xffffff, 1 );
+      directionalLight.position.set( 0, 0, 5 );
       scene.add( directionalLight );
 
       // Camera
@@ -89,6 +89,7 @@ var camera,
       camera.toOrthographic();
 
       // Action
+      createBackground();
       scene.add(camera);
 
     };

@@ -10,16 +10,24 @@ var createBall = function(radius, vertslices, horizslices, color) {
 
 var createWalls = function(width, height, depth, thickness) {
    // Create 4 meshes and bind them together
-
+   
    // Then give them the right material
  };
 
-var onResize = function() {
+// var onResize = function() {
   // renderer.setSize(window.innerWidth, window.innerHeight);
   // camera.aspect = window.innerWidth/window.innerHeight;
   // camera.updateProjectionMatrix();
-};
+// };
 
 var onMoveKey = function(axis) {
   keyAxis = axis.slice(0);
+};
+
+var createBackground = function() {
+  var plane = new THREE.Mesh(new THREE.PlaneGeometry(30, 30),
+         new THREE.MeshLambertMaterial({color: 0xffffff}));
+  plane.position.set(0, 0, -1);
+  plane.rotation.set(0, 0, 0);
+  scene.add(plane);
 };
