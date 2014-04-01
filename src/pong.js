@@ -25,13 +25,15 @@ var camera,
     bottomMesh,
     ballLight,
     playerStart = [-7, 0],
-    cpuStart = [7, 0],
+    cpuStart    = [7, 0],
+    ballTexture = THREE.ImageUtils.loadTexture('img/hr2.png'),
 
     // Game state
     gameDims    = [20, 10], // Width & Height
     cameraMod   = 57,
     gameState   = 'initialize',
-    ballRadius  = 0.25, // Perfect
+    // ballRadius  = 0.25, // Perfect
+    ballRadius = 0.35,
     playerDims  = [0.3, 1.2, 0.4], // Same as cpu for now
     cpuDims     = [0.3, 1.2, 0.4], // Same as player for now
     playerColor = 0x0055ff,
@@ -41,7 +43,22 @@ var camera,
     cpuSpeed    = 0.09, // TODO: Calibrate this :D
     ballSpeedX  = -0.13, // TODO: Calibrate this
     ballSpeedY  = 0.13, // TODO: Calibrate this
-    level       = 1;
+    ballRotationX = 0.05,
+    ballRotationY = 0.05,
+    ballRotationZ = 0.02,
+    level       = 1,
+    danceParty  = {
+      on: function(){
+
+      },
+      off: function(){
+
+      },
+      render: function(){
+
+      }
+    };
+
 
 
 
@@ -91,6 +108,9 @@ var updateWorld = function() {
   moveCpu();
   ballMesh.position.x += ballSpeedX;
   ballMesh.position.y += ballSpeedY;
+  ballMesh.rotation.x += ballRotationX;
+  ballMesh.rotation.y += ballRotationY;
+  ballMesh.rotation.z += ballRotationZ;
 };
 
 var gameLoop = function() { // TODO FINISH THIS
@@ -105,6 +125,7 @@ var gameLoop = function() { // TODO FINISH THIS
     case 'play':
       toggleButtons();
       updateWorld();
+      danceParty.render();
       renderer.render(scene, camera);
       // Add game logic here
       checkCollisions();
@@ -117,7 +138,7 @@ var gameLoop = function() { // TODO FINISH THIS
         camera.toPerspective();
       } else if(level === 2) {
         level = 3;
-        // danceParty.start();
+        danceParty.on();
       }
       gameState = 'play';
       $('#level').text('Level ' + level);
@@ -130,13 +151,10 @@ var gameLoop = function() { // TODO FINISH THIS
         camera.toOrthographic();
       } else if(level === 3){
         level = 2;
-        // danceParty.end();
+        danceParty.off();
       }
       $('#level').text('Level ' + level);
       gameState = 'play';
-      break;
-
-    case 'loseBall':
       break;
   }
 

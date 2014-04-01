@@ -16,8 +16,9 @@ var createPaddleMesh = function(sizeArray, color, coords) {
 
 var createBallMesh = function(radius, vertslices, horizslices, color) {
   var g = new THREE.SphereGeometry(radius, vertslices, horizslices);
-  var ball = new THREE.Mesh(g, new THREE.MeshPhongMaterial({color: color}));
+  var ball = new THREE.Mesh(g, new THREE.MeshPhongMaterial({map: ballTexture}));
   ball.position.set(0,0,0);
+  ball.rotation.set(0, -(Math.PI/2), 0);
   return ball;
 };
 
@@ -97,6 +98,7 @@ var checkCollisions = function() {
   if((Math.abs(ballMesh.position.y) + ballRadius + 0.3) > gameDims[1]/2) {
     //Play Noise
     ballSpeedY *= -1;
+    ballRotationY *= -1;
   }
 
   if(Math.abs(Math.abs(ballMesh.position.x) - 6.85) < 0.05) {
@@ -104,11 +106,13 @@ var checkCollisions = function() {
       if(Math.abs(playerMesh.position.y - ballMesh.position.y) < 1.2) {
         ballSpeedX = 0.13;
         ballSpeedY = 0.13 * ((ballMesh.position.y - playerMesh.position.y)/1.2);
+        ballRotationY *= -1;
       }
     } else {
       if(Math.abs(cpuMesh.position.y - ballMesh.position.y) < 1.2) {
         ballSpeedX = -0.13;
         ballSpeedY = 0.13 * ((ballMesh.position.y - cpuMesh.position.y)/1.2);
+        ballRotationY *= -1;
       }
     }
   }
@@ -121,5 +125,6 @@ var checkCollisions = function() {
       gameState = 'levelDown';
     }
     ballSpeedX *= -1;
+    ballRotationY *= -1;
   }
 };
