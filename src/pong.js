@@ -13,6 +13,7 @@ var camera,
     // Keyboard
     keyAxis = [0, 0],
     controlStyle = 0,
+    buttonDebouncer = true,
 
     // Game objects
     planeMesh,
@@ -102,6 +103,7 @@ var gameLoop = function() { // TODO FINISH THIS
       break;
 
     case 'play':
+      toggleButtons();
       updateWorld();
       renderer.render(scene, camera);
       // Add game logic here

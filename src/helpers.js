@@ -1,3 +1,11 @@
+var createWallMesh = function(coords) {
+  var wall = new THREE.Mesh(new THREE.CubeGeometry(gameDims[0] - 3, 0.4, 0.4),
+         new THREE.MeshLambertMaterial({color: 0x666666}));
+
+  wall.position.set(coords[0], coords[1], -0.5);
+  return wall;
+};
+
 var createPaddleMesh = function(sizeArray, color, coords) {
   var g = new THREE.CubeGeometry(sizeArray[0], sizeArray[1], sizeArray[2]);
   var paddle = new THREE.Mesh(g, new THREE.MeshPhongMaterial({color: color}));
@@ -21,31 +29,38 @@ var createBackground = function() {
   scene.add(plane);
 };
 
-var createWallMesh = function(coords) {
-  var wall = new THREE.Mesh(new THREE.CubeGeometry(gameDims[0] - 3, 0.4, 0.4),
-         new THREE.MeshLambertMaterial({color: 0x666666}));
-
-  wall.position.set(coords[0], coords[1], -0.5);
-  return wall;
-};
-
 var onMoveKey = function(axis) {
   keyAxis = axis.slice(0);
 };
 
-var updatePaddle = function(target, paddleBody) {
-  // Updates a paddle given a target
-
+var toggleButtons = function() {
+  if(buttonDebouncer) {
+    var keys = KeyboardJS.activeKeys();
+    if(keys[0] === "c"){
+      console.log(camera.inOrthographicMode);
+      if(camera.inOrthographicMode) {
+        camera.toPerspective();
+      } else {
+        camera.toOrthographic();
+      }
+      buttonDebouncer = false;
+      setTimeout(function() { buttonDebouncer = true; }, 200);
+    }
+    if(keys[0] === "l"){
+      controlStyle = 1; // Leap Mode
+      buttonDebouncer = false;
+      setTimeout(function() { buttonDebouncer = true; }, 200);
+    }
+    if(keys[0] === "k"){
+      controlStyle = 0; // Keyboard Mode
+      buttonDebouncer = false;
+      setTimeout(function() { buttonDebouncer = true; }, 200);
+    }
+  }
 };
 
 var movePlayer = function() {
   var keys = KeyboardJS.activeKeys();
-  if(keys[0] === "l"){
-    controlStyle = 1; // Leap Mode
-  }
-  if(keys[0] === "k"){
-    controlStyle = 0; // Keyboard Mode
-  }
   if(!controlStyle){
     if(keys[0] === "w"){
       if(playerMesh.position.y < 4){
