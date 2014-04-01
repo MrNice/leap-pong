@@ -30,8 +30,8 @@ var createBackground = function() {
   return plane;
 };
 
-var toggleBackgound = function() {
-  plane.position.set(0, 0, 11);
+var toggleBackground = function() {
+  scene.remove(backgroundMesh);
 };
 
 var onMoveKey = function(axis) {

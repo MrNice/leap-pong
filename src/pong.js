@@ -146,6 +146,11 @@ var gameLoop = function() { // TODO FINISH THIS
       break;
 
     case 'play':
+      particleCloud.geometry.verticesNeedUpdate = true;
+
+      attributes.size.needsUpdate = true;
+      attributes.pcolor.needsUpdate = true;
+
       toggleButtons();
       updateWorld();
       danceParty.render();
@@ -161,6 +166,7 @@ var gameLoop = function() { // TODO FINISH THIS
         camera.toPerspective();
       } else if(level === 2) {
         level = 3;
+        scene.remove(backgroundMesh);
         danceParty.on();
       }
       gameState = 'play';
@@ -175,6 +181,7 @@ var gameLoop = function() { // TODO FINISH THIS
         camera.toOrthographic();
       } else if(level === 3){
         level = 2;
+        scene.add(backgroundMesh);
         danceParty.off();
       }
       $('#level').text('Level ' + level);

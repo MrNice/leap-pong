@@ -82,15 +82,15 @@ var initParticles = function(){
 
   function generateSprite() {
     var canvas = document.createElement( 'canvas' );
-    canvas.width = 128;
-    canvas.height = 128;
+    canvas.width = 20;
+    canvas.height = 14;
 
     var context = canvas.getContext( '2d' );
 
     context.beginPath();
-    context.arc( 64, 64, 60, 0, Math.PI * 2, false) ;
+    context.arc( 2, 2, 5, 0, Math.PI * 2, false) ;
 
-    context.lineWidth = 0.5; //0.05
+    context.lineWidth = 0.2; //0.05
     context.stroke();
     context.restore();
 
@@ -123,14 +123,15 @@ var initParticles = function(){
 
   });
 
-  particleCloud = new THREE.ParticleSystem( particles, shaderMaterial );
+  particleCloud = new THREE.ParticleSystem( particles, new THREE.ParticleBasicMaterial({size: 0.2}) );
+  // particleCloud = new THREE.ParticleSystem( particles, shaderMaterial );
     var vertices = particleCloud.geometry.vertices;
   var values_size = attributes.size.value;
   var values_color = attributes.pcolor.value;
 
   for( var v = 0; v < vertices.length; v ++ ) {
 
-    values_size[ v ] = 50;
+    values_size[ v ] = 10;
 
     values_color[ v ] = new THREE.Color( 0x000000 );
 
@@ -198,10 +199,15 @@ var initParticles = function(){
       emitterpos.x = pointOnShape.x * 5 - 100;
       emitterpos.y = -pointOnShape.y * 5 + 400;
 
+      // emitterpos.x = ballMesh.x;
+      // emitterpos.y = ballMesh.y;
+      // emitterpos.x = 0;
+      // emitterpos.y = 0;
+
       // pointLight.position.copy( emitterpos );
       pointLight.position.x = emitterpos.x;
       pointLight.position.y = emitterpos.y;
-      pointLight.position.z = 100;
+      pointLight.position.z = 10;
 
       particles.vertices[ target ] = p.position;
 
@@ -251,9 +257,9 @@ var initParticles = function(){
   // TOTRY Set velocity to move away from centroid
 
   sparksEmitter.addAction( new SPARKS.Age() );
-  sparksEmitter.addAction( new SPARKS.Accelerate( 0, 0, -50 ) );
+  sparksEmitter.addAction( new SPARKS.Accelerate( 0, 0, 0 ) );
   sparksEmitter.addAction( new SPARKS.Move() );
-  sparksEmitter.addAction( new SPARKS.RandomDrift( 90, 100, 2000 ) );
+  sparksEmitter.addAction( new SPARKS.RandomDrift( 1, 1, 1 ) );
 
 
   sparksEmitter.addCallback( "created", onParticleCreated );
@@ -272,7 +278,7 @@ var initParticles = function(){
   effectBlurX = new THREE.ShaderPass( shaderBlur, 'texture' );
   effectBlurY = new THREE.ShaderPass( shaderBlur, 'texture' );
 
-  var radius = 15;
+  var radius = 2;
   var blurAmountX = radius / window.innerWidth;
   var blurAmountY = radius / window.innerHeight;
 
