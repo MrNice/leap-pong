@@ -1,3 +1,10 @@
+/****************************************
+Hacker Pong
+Cohort 11 Hackathon Project
+MrNice <Nicholas@niceguys.co>
+Made with love and theft <3
+****************************************/
+
 var camera,
     scene,
     renderer,
@@ -13,10 +20,10 @@ var camera,
     light,
     // Game state
     gameState   = 'initialize',
-    ballRadius  = 0.25,
-    playerDims  = [0.3, 1.2, 0.6],
-    cpuDims     = [0.3, 1.2, 0.6],
-    wallDims    = [6, 7.2, 0.6, 0.3], // Width*20, Height*6, Depth, width
+    ballRadius  = 0.25, // Perfect
+    playerDims  = [0.3, 1.2, 0.6], // Same as cpu for now
+    cpuDims     = [0.3, 1.2, 0.6], // Same as player for now
+    wallDims    = [7, 10, 1, 0.3], // Autocadded for basic feel
     playerColor = 0xbbbbcc,
     cpuColor    = 0xbbbbcc,
     ballColor   = 0xffffff,
@@ -91,9 +98,13 @@ var camera,
         case 'play':
           updateRenderWorld();
           renderer.render(scene, camera);
+          // Add game logic here
           break;
 
         case 'levelUp':
+          break;
+
+        case 'loseBall':
           break;
       }
 
