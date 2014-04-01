@@ -19,25 +19,27 @@ var camera,
     ballMesh,
     playerMesh,
     cpuMesh,
+    topMesh,
+    bottomMesh,
     ballLight,
     playerStart = [-5, 0],
     cpuStart = [5, 0],
 
 
     // Game state
-    gameDims    = [20, 14], // Width & Height
+    gameDims    = [17, 10], // Width & Height
     cameraMod   = 57,
     gameState   = 'initialize',
     ballRadius  = 0.25, // Perfect
     playerDims  = [0.3, 1.2, 0.4], // Same as cpu for now
     cpuDims     = [0.3, 1.2, 0.4], // Same as player for now
-    wallDims    = [7, 10, 1, 0.3], // Autocadded for basic feel
     playerColor = 0x0055ff,
     cpuColor    = 0xffcc33,
     ballColor   = 0xffffff,
-    paddleSpeed = undefined, // TODO: Calibrate this :D
-    ballSpeedX  = undefined, // TODO: Calibrate this
-    ballSpeedY  = undefined, // TODO: Calibrate this
+    playerSpeed = 0.3, // TODO: Calibrate this :D
+    cpuSpeed    = 0.1, // TODO: Calibrate this :D
+    ballSpeedX  = -0.2, // TODO: Calibrate this
+    ballSpeedY  = 0.2, // TODO: Calibrate this
     level       = 1,
 
     // Textures
@@ -54,56 +56,73 @@ var camera,
 
     // Box2D world variables
     wWorld,
+    wTop,
+    wBottom,
     wPlayer,
     wCpu,
     wBall;
 
     var createPhysicsWorld = function() {
-      // Make world object
       wWorld = new b2World(new b2Vec2(0, 0), true);
 
-      // Create the paddles
+      var fixDef = new b2FixtureDef();
       var bodyDef = new b2BodyDef();
-      bodyDef.type = b2Body.b2_dynamicBody;
 
-      bodyDef.position.Set(-1.5, playerDims[1]/2);
-      wPlayer = wWorld.CreateBody(bodyDef);
+      bodyDef.type = b2Body.b2_staticBody;// Paddles are controlled seperately from game physics
+      fixDef.density = 0.5;
+      fixDef.friction = 0.0;
+      fixDef.resitution = 1;
+      fixDef.shape = new b2PolygonShape();
+
+      // Game Walls
+      fixDef.shape.SetAsBox(gameDims[0], cpuDims[0]);
+      bodyDef.position.Set(0, gameDims[1]/2);
+      wTop = wWorld.CreateBody(bodyDef).CreateFixture(fixDef);
+
+      bodyDef.position.Set(0, - gameDims[1]/2);
+      wBottom = wWorld.CreateBody(bodyDef).CreateFixture(fixDef);
+
+
+      // Player
+      bodyDef.position.Set(playerStart, playerDims[1]/2);
+      fixDef.shape.SetAsBox(playerDims[0], playerDims[1]);
+      wPlayer = wWorld.CreateBody(bodyDef).CreateFixture(fixDef);
+
+      // CPU
+      bodyDef.position.Set(cpuStart, cpuDims[1]/2);
+      fixDef.shape.SetAsBox(cpuDims[0], cpuDims[1]);
+      wCpu = wWorld.CreateBody(bodyDef).CreateFixture(fixDef);
+
+      // Add the ball
+      bodyDef.type = b2Body.b2_dynamicBody;
+      bodyDef.position.Set(0, 0);
+      fixDef.shape = new b2CircleShape(ballRadius);
+      wBall = wWorld.CreateBody(bodyDef).CreateFixture(fixDef);
+
     };
 
     var createRenderWorld = function() {
       scene = new THREE.Scene();
 
       // Meshes for paddles, ball, and walls
-      playerMesh = createPaddle(playerDims, playerColor, playerStart);
-      cpuMesh = createPaddle(cpuDims, cpuColor, cpuStart);
-      ballMesh = createBall(ballRadius, 32, 32, ballColor);
-      wallsMesh = createWalls(wallDims[0], wallDims[1], wallDims[2], wallDims[3])
+      playerMesh = createPaddleMesh(playerDims, playerColor, playerStart);
+      cpuMesh = createPaddleMesh(cpuDims, cpuColor, cpuStart);
+      ballMesh = createBallMesh(ballRadius, 32, 32, ballColor);
+      topMesh = createWallMesh([0, gameDims[1]/2 - 0.3]);
+      bottomMesh = createWallMesh([0, - (gameDims[1]/2 - 0.3)]);
       scene.add(playerMesh);
       scene.add(cpuMesh);
       scene.add(ballMesh);
+      scene.add(topMesh);
+      scene.add(bottomMesh);
 
       // Lights
       var directionalLight = new THREE.DirectionalLight( 0xffffff, 1 );
       directionalLight.position.set( 0, 0, 5 );
       scene.add( directionalLight );
 
-      // var spotLight = new THREE.SpotLight( 0xffffff );
-
-      // spotLight.position.set( 0, 0, 100 );
-
-      // spotLight.castShadow = true;
-
-      // spotLight.shadowMapWidth = 1024;
-      // spotLight.shadowMapHeight = 1024;
-
-      // spotLight.shadowCameraNear = 500;
-      // spotLight.shadowCameraFar = 4000;
-      // spotLight.shadowCameraFov = 30;
-
-      // scene.add( spotLight );
-
       var ballLight = new THREE.PointLight( 0xffffff, 1, 1000 );
-      ballLight.position.set( 0, 0, 4 );
+      ballLight.position.set(0, 0, 4);
       scene.add( ballLight );
 
       // Camera
@@ -113,6 +132,7 @@ var camera,
                                          1, 20,
                                          -10, 20); // TODO: Fix this
       camera.position.set(0, 0, 10);
+      /****************************************************************************/
       // camera.toOrthographic();
 
       // Action
