@@ -9,8 +9,10 @@ var camera,
     scene,
     renderer,
     light,
+
     // Keyboard
     keyAxis = [0, 0],
+
     // Game objects
     planeMesh,
     borderMesh,
@@ -18,7 +20,9 @@ var camera,
     playerMesh,
     cpuMesh,
     light,
+
     // Game state
+    gameDims    = [20, 14], // Width & Height
     gameState   = 'initialize',
     ballRadius  = 0.25, // Perfect
     playerDims  = [0.3, 1.2, 0.6], // Same as cpu for now
@@ -31,6 +35,7 @@ var camera,
     ballSpeedX  = undefined, // TODO: Calibrate this
     ballSpeedY  = undefined, // TODO: Calibrate this
     level       = 1,
+
     // Textures
 
     // Box2D shortcuts
@@ -42,20 +47,27 @@ var camera,
     b2PolygonShape = Box2D.Collision.Shapes.b2PolygonShape,
     b2Settings     = Box2D.Common.b2Settings,
     b2Vec2         = Box2D.Common.Math.b2Vec2,
+
     // Box2D world variables
     wWorld,
+    wPlayer,
+    wCpu,
     wBall;
 
     var createPhysicsWorld = function() {
+      // Make world object
+      wWorld = new b2World(new b2Vec2(0, 0), true);
 
+      // Create the paddles
+      var bodyDef = new b2BodyDef();
+      bodyDef.type = b2Body.b2_dynamicBody;
+
+      bodyDef.position.Set(-1.5, playerDims[1]/2);
+      wPlayer = wWorld.CreateBody(bodyDef);
     };
 
     var createRenderWorld = function() {
       scene = new THREE.Scene();
-
-      var directionalLight = new THREE.DirectionalLight( 0xffffff, 0.8 );
-      directionalLight.position.set( 0, 1, 5 );
-      scene.add( directionalLight );
 
       // Meshes for paddles, ball, and walls
       playerMesh = createPaddle(playerDims, playerColor);
@@ -66,14 +78,18 @@ var camera,
       scene.add(cpuMesh);
       scene.add(ballMesh);
 
-      camera = new THREE.CombinedCamera( window.innerWidth / 2, window.innerHeight / 2, 70, 1, 10, - 5, 10); // TODO: Fix this
-      camera.position.set(1, 1, 4);
+      // Lights
+      var directionalLight = new THREE.DirectionalLight( 0xffffff, 0.8 );
+      directionalLight.position.set( 0, 1, 5 );
+      scene.add( directionalLight );
+
+      // Camera
+      camera = new THREE.CombinedCamera( gameDims[0]*57, gameDims[1]*57, 30, 1, 10, - 10, 20); // TODO: Fix this
+      camera.position.set(0, 0, 9);
       camera.toOrthographic();
+
+      // Action
       scene.add(camera);
-
-    };
-
-    var createMeshes = function() {
 
     };
 
@@ -91,7 +107,7 @@ var camera,
         case 'initialize':
           createPhysicsWorld();
           createRenderWorld();
-          camera.position.set(1, 1, 5);
+          camera.position.set(0, 0, 9);
           gameState = 'play';
           break;
 
@@ -112,36 +128,15 @@ var camera,
       requestAnimationFrame(gameLoop);
     };
 
-    var onResize = function() {
-      renderer.setSize(window.innerWidth, window.innerHeight);
-      camera.aspect = window.innerWidth/window.innerHeight;
-      camera.updateProjectionMatrix();
-    };
-
-    var onMoveKey = function(axis) {
-      keyAxis = axis.slice(0);
-    };
-
-    jQuery.fn.centerv = function() {
-
-    };
-
-    jQuery.fn.centerh = function() {
-
-    };
-
-    jQuery.fn.center = function() {
-      this.centerv();
-      this.centerh();
-      return this;
-    };
 
     $(function() {
-
       // Create the Renderer:
       renderer = new THREE.WebGLRenderer();
-      renderer.setSize(window.innerWidth, window.innerHeight);
-      document.body.appendChild(renderer.domElement);
+      renderer.setSize(gameDims[0]*57, gameDims[1]*57);
+      // $('#gamebox').appendChild(renderer.domElement);
+      // document.body.appendChild(renderer.domElement);
+      document.getElementById('gamebox').appendChild(renderer.domElement);
+
 
       // Input Event Bindings
       KeyboardJS.bind.axis('up', 'down', onMoveKey);
