@@ -12,6 +12,7 @@ var camera,
 
     // Keyboard
     keyAxis = [0, 0],
+    controlStyle = 0,
 
     // Game objects
     planeMesh,
@@ -35,8 +36,8 @@ var camera,
     playerColor = 0x0055ff,
     cpuColor    = 0xffcc33,
     ballColor   = 0xffffff,
-    playerSpeed = 0.3, // TODO: Calibrate this :D
-    cpuSpeed    = 0.1, // TODO: Calibrate this :D
+    playerSpeed = 0.2, // TODO: Calibrate this :D
+    cpuSpeed    = 0.09, // TODO: Calibrate this :D
     ballSpeedX  = -0.13, // TODO: Calibrate this
     ballSpeedY  = 0.13, // TODO: Calibrate this
     level       = 1;
@@ -62,9 +63,9 @@ var createWorld = function() {
   directionalLight.position.set( 0, 0, 10 );
   scene.add( directionalLight );
 
-  // var ballLight = new THREE.PointLight( 0xffffff, 1, 1000 );
-  // ballLight.position.set(0, 0, 4);
-  // scene.add( ballLight );
+  var ballLight = new THREE.PointLight( 0xffffff, 1, 1000 );
+  ballLight.position.set(0, 0, 4);
+  scene.add( ballLight );
 
   // Camera
   camera = new THREE.CombinedCamera(gameDims[0] * cameraMod,
@@ -85,6 +86,8 @@ var createWorld = function() {
 
 var updateWorld = function() {
   // Update ball position.
+  movePlayer();
+  moveCpu();
   ballMesh.position.x += ballSpeedX;
   ballMesh.position.y += ballSpeedY;
 };
@@ -102,9 +105,33 @@ var gameLoop = function() { // TODO FINISH THIS
       updateWorld();
       renderer.render(scene, camera);
       // Add game logic here
+      checkCollisions();
       break;
 
     case 'levelUp':
+      if(level === 1) {
+        level = 2;
+        // transitionToPerspective();
+        camera.toPerspective();
+      } else if(level === 2) {
+        level = 3;
+        // danceParty.start();
+      }
+      gameState = 'play';
+      $('#level').text('Level ' + level);
+      break;
+
+    case 'levelDown':
+      if(level === 2) {
+        level = 1;
+        // transitionToPerspective();
+        camera.toOrthographic();
+      } else if(level === 3){
+        level = 2;
+        // danceParty.end();
+      }
+      $('#level').text('Level ' + level);
+      gameState = 'play';
       break;
 
     case 'loseBall':
@@ -117,13 +144,9 @@ var gameLoop = function() { // TODO FINISH THIS
 
 
 $(function() {
-  // Create the Renderer:
   renderer = new THREE.WebGLRenderer();
   renderer.setSize(gameDims[0] * cameraMod, gameDims[1] * cameraMod);
   document.getElementById('gamebox').appendChild(renderer.domElement);
-
-  // Input Event Bindings
-  KeyboardJS.bind.axis('up', 'down', onMoveKey);
 
   // Start the game loop
   requestAnimationFrame(gameLoop);

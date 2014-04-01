@@ -20,7 +20,7 @@ var createBackground = function() {
 };
 
 var createWallMesh = function(coords) {
-  var wall = new THREE.Mesh(new THREE.CubeGeometry(gameDims[0] - 3, cpuDims[0], 0.4),
+  var wall = new THREE.Mesh(new THREE.CubeGeometry(gameDims[0] - 3, 0.4, 0.4),
          new THREE.MeshLambertMaterial({color: 0x666666}));
 
   wall.position.set(coords[0], coords[1], 1);
@@ -34,4 +34,61 @@ var onMoveKey = function(axis) {
 var updatePaddle = function(target, paddleBody) {
   // Updates a paddle given a target
 
+};
+
+var movePlayer = function() {
+  var keys = KeyboardJS.activeKeys();
+  if(keys[0] === "l"){
+    controlStyle = 1; // Leap Mode
+  }
+  if(keys[0] === "k"){
+    controlStyle = 0; // Keyboard Mode
+  }
+  if(keys[0] === "w"){
+    playerMesh.position.y += playerSpeed;
+  }
+  if(keys[0] === "s") {
+    playerMesh.position.y -= playerSpeed;
+  }
+};
+
+var moveCpu = function() {
+  if(ballMesh.position.x > 1 && ballSpeedX > 0) {
+    if(ballMesh.position.y > cpuMesh.position.y) {
+      cpuMesh.position.y += cpuSpeed;
+    } else {
+      cpuMesh.position.y -= cpuSpeed;
+    }
+  }
+};
+
+var checkCollisions = function() {
+  if((Math.abs(ballMesh.position.y) + ballRadius + 0.5) > gameDims[1]/2) {
+    //Play Noise
+    ballSpeedY *= -1;
+  }
+
+  if(Math.abs(Math.abs(ballMesh.position.x - 0.13) - 7) < 0.05) {
+    if(ballMesh.position.x < 0) {
+      if(Math.abs(playerMesh.position.y - ballMesh.position.y) < 1.2) {
+        ballSpeedX = 0.13;
+        ballSpeedY = 0.13 * ((ballMesh.position.y - playerMesh.position.y)/1.2);
+      }
+    } else {
+      if(Math.abs(cpuMesh.position.y - ballMesh.position.y) < 1.2) {
+        ballSpeedX = -0.13;
+        ballSpeedY = 0.13 * ((ballMesh.position.y - cpuMesh.position.y)/1.2);
+      }
+    }
+  }
+
+  if(Math.abs(ballMesh.position.x + ballRadius) > 10) {
+    //Play Noise
+    if(ballMesh.position.x > 0) {
+      gameState = 'levelUp';
+    } else {
+      gameState = 'levelDown';
+    }
+    ballSpeedX *= -1;
+  }
 };
