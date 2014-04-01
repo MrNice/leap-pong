@@ -33,7 +33,7 @@ var camera,
     gameDims    = [20, 10], // Width & Height
     cameraMod   = 57,
     gameState   = 'initialize',
-    cpuDisabled = true,
+    cpuDisabled = false,
     // ballRadius  = 0.25, // Perfect
     ballRadius = 0.35,
     playerDims  = [0.3, 1.2, 0.4], // Same as cpu for now
