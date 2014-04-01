@@ -19,14 +19,18 @@ var camera,
     ballMesh,
     playerMesh,
     cpuMesh,
-    light,
+    ballLight,
+    playerStart = [-5, 0],
+    cpuStart = [5, 0],
+
 
     // Game state
     gameDims    = [20, 14], // Width & Height
+    cameraMod   = 57,
     gameState   = 'initialize',
     ballRadius  = 0.25, // Perfect
-    playerDims  = [0.3, 1.2, 0.6], // Same as cpu for now
-    cpuDims     = [0.3, 1.2, 0.6], // Same as player for now
+    playerDims  = [0.3, 1.2, 0.4], // Same as cpu for now
+    cpuDims     = [0.3, 1.2, 0.4], // Same as player for now
     wallDims    = [7, 10, 1, 0.3], // Autocadded for basic feel
     playerColor = 0x0055ff,
     cpuColor    = 0xffcc33,
@@ -70,8 +74,8 @@ var camera,
       scene = new THREE.Scene();
 
       // Meshes for paddles, ball, and walls
-      playerMesh = createPaddle(playerDims, playerColor);
-      cpuMesh = createPaddle(cpuDims, cpuColor);
+      playerMesh = createPaddle(playerDims, playerColor, playerStart);
+      cpuMesh = createPaddle(cpuDims, cpuColor, cpuStart);
       ballMesh = createBall(ballRadius, 32, 32, ballColor);
       wallsMesh = createWalls(wallDims[0], wallDims[1], wallDims[2], wallDims[3])
       scene.add(playerMesh);
@@ -83,10 +87,33 @@ var camera,
       directionalLight.position.set( 0, 0, 5 );
       scene.add( directionalLight );
 
+      // var spotLight = new THREE.SpotLight( 0xffffff );
+
+      // spotLight.position.set( 0, 0, 100 );
+
+      // spotLight.castShadow = true;
+
+      // spotLight.shadowMapWidth = 1024;
+      // spotLight.shadowMapHeight = 1024;
+
+      // spotLight.shadowCameraNear = 500;
+      // spotLight.shadowCameraFar = 4000;
+      // spotLight.shadowCameraFov = 30;
+
+      // scene.add( spotLight );
+
+      var ballLight = new THREE.PointLight( 0xffffff, 1, 1000 );
+      ballLight.position.set( 0, 0, 4 );
+      scene.add( ballLight );
+
       // Camera
-      camera = new THREE.CombinedCamera( gameDims[0]*57, gameDims[1]*57, 30, 1, 10, - 10, 20); // TODO: Fix this
-      camera.position.set(0, 0, 9);
-      camera.toOrthographic();
+      camera = new THREE.CombinedCamera( gameDims[0] * cameraMod,
+                                         gameDims[1] * cameraMod,
+                                         70,
+                                         1, 20,
+                                         -10, 20); // TODO: Fix this
+      camera.position.set(0, 0, 10);
+      // camera.toOrthographic();
 
       // Action
       createBackground();
@@ -133,7 +160,7 @@ var camera,
     $(function() {
       // Create the Renderer:
       renderer = new THREE.WebGLRenderer();
-      renderer.setSize(gameDims[0]*57, gameDims[1]*57);
+      renderer.setSize(gameDims[0] * cameraMod, gameDims[1] * cameraMod);
       // $('#gamebox').appendChild(renderer.domElement);
       // document.body.appendChild(renderer.domElement);
       document.getElementById('gamebox').appendChild(renderer.domElement);
@@ -141,7 +168,7 @@ var camera,
 
       // Input Event Bindings
       KeyboardJS.bind.axis('up', 'down', onMoveKey);
-      $(window).resize(onResize);
+      // $(window).resize(onResize);
 
       // Start the game loop
       requestAnimationFrame(gameLoop);
