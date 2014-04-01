@@ -73,7 +73,7 @@ var movePlayer = function() {
     }
   } else {
     // Leap Control
-    var position = leapPosition - 0.5;
+    var position = leapPosition - 0.7;
     position *= 6;
     if(playerMesh.position.y < 4 && playerMesh.position.y < position){
       playerMesh.position.y = position;
