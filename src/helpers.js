@@ -18,6 +18,7 @@ var createBackground = function() {
   plane.rotation.set(0, 0, 0);
   scene.add(plane);
 };
+
 var createWallMesh = function(coords) {
   var wall = new THREE.Mesh(new THREE.CubeGeometry(gameDims[0] - 3, cpuDims[0], 0.4),
          new THREE.MeshLambertMaterial({color: 0x666666}));
@@ -25,12 +26,6 @@ var createWallMesh = function(coords) {
   wall.position.set(coords[0], coords[1], 1);
   return wall;
 };
-
-// var onResize = function() {
-  // renderer.setSize(window.innerWidth, window.innerHeight);
-  // camera.aspect = window.innerWidth/window.innerHeight;
-  // camera.updateProjectionMatrix();
-// };
 
 var onMoveKey = function(axis) {
   keyAxis = axis.slice(0);
