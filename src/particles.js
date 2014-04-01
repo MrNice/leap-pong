@@ -1,13 +1,16 @@
+var delta = 1, clock = new THREE.Clock();
+var heartShape, particleCloud, sparksEmitter, emitterPos;
+var _rotation = 0;
+var timeOnShapePath = 0;
+var composer;
+var effectBlurX, effectBlurY, hblur, vblur;
+var group, text, plane;
+var speed = 50;
 
-      var delta = 1, clock = new THREE.Clock();
-
-      var heartShape, particleCloud, sparksEmitter, emitterPos;
-      var _rotation = 0;
-      var timeOnShapePath = 0;
-
-      var composer;
-      var effectBlurX, effectBlurY, hblur, vblur;
-var init = function(){
+var initParticles = function(){
+  pointLight = new THREE.PointLight( 0xffffff, 2, 300 );
+  pointLight.position.set( 0, 0, 0 );
+  scene.add( pointLight );
   group = new THREE.Object3D();
   scene.add( group );
 

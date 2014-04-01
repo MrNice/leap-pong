@@ -33,7 +33,7 @@ var camera,
     gameDims    = [20, 10], // Width & Height
     cameraMod   = 57,
     gameState   = 'initialize',
-    cpuDisabled = false,
+    cpuDisabled = true,
     // ballRadius  = 0.25, // Perfect
     ballRadius = 0.35,
     playerDims  = [0.3, 1.2, 0.4], // Same as cpu for now
@@ -140,6 +140,7 @@ var gameLoop = function() { // TODO FINISH THIS
 
     case 'initialize':
       createWorld();
+      initParticles();
       camera.position.set(0, 0, 9);
       gameState = 'play';
       break;
