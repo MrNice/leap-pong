@@ -37,7 +37,6 @@ var toggleButtons = function() {
   if(buttonDebouncer) {
     var keys = KeyboardJS.activeKeys();
     if(keys[0] === "c"){
-      console.log(camera.inOrthographicMode);
       if(camera.inOrthographicMode) {
         camera.toPerspective();
       } else {
@@ -73,7 +72,14 @@ var movePlayer = function() {
       }
     }
   } else {
-
+    // Leap Control
+    var position = leapPosition - 0.5;
+    position *= 6;
+    if(playerMesh.position.y < 4 && playerMesh.position.y < position){
+      playerMesh.position.y = position;
+    } else if (- playerMesh.position.y < 4 && playerMesh.position.y > position){
+      playerMesh.position.y = position;
+    }
   }
 };
 
