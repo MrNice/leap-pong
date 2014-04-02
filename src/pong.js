@@ -6,9 +6,12 @@ Made with love and theft <3
 ****************************************/
 
 var camera,
+    cameraToggle = true,
     scene,
     renderer,
     light,
+    music = new Howl({urls: ['music/focus.mp3'], loop: true}),
+    volume = 1,
 
     // Keyboard
     keyAxis = [0, 0],
@@ -48,17 +51,10 @@ var camera,
     ballRotationX = 0.05,
     ballRotationY = 0.05,
     ballRotationZ = 0.02,
+    rainbow     = ['red', 'orange', 'yellow', 'green', 'blue', 'purple', 'pink'],
     level       = 1,
-    danceParty  = {
-      on: function(){
+    danceParty  = function(){
 
-      },
-      off: function(){
-
-      },
-      render: function(){
-
-      }
     };
 
 
@@ -139,21 +135,34 @@ var gameLoop = function() { // TODO FINISH THIS
   switch(gameState) {
 
     case 'initialize':
+      volumeInit();
       createWorld();
       initParticles();
       camera.position.set(0, 0, 9);
+      console.log(music);
       gameState = 'play';
       break;
 
     case 'play':
-      particleCloud.geometry.verticesNeedUpdate = true;
 
-      attributes.size.needsUpdate = true;
-      attributes.pcolor.needsUpdate = true;
+      if(level === 3) {
+        music.pos3d(ballMesh.position.x/1.5);
+        if(cameraToggle) {
+          camera.setFov(camera.fov + 0.6);
+          if(camera.fov >= 73) {
+            cameraToggle = false;
+          }
+        } else {
+          camera.setFov(camera.fov - 2);
+          if(camera.fov <= 69) {
+            cameraToggle = true;
+          }
+        }
+      }
 
       toggleButtons();
       updateWorld();
-      danceParty.render();
+      // updateParticles();
       renderer.render(scene, camera);
       // Add game logic here
       checkCollisions();
@@ -167,7 +176,7 @@ var gameLoop = function() { // TODO FINISH THIS
       } else if(level === 2) {
         level = 3;
         scene.remove(backgroundMesh);
-        danceParty.on();
+        music.play();
       }
       gameState = 'play';
       $('#level').text('Level ' + level);
@@ -182,7 +191,8 @@ var gameLoop = function() { // TODO FINISH THIS
       } else if(level === 3){
         level = 2;
         scene.add(backgroundMesh);
-        danceParty.off();
+        camera.setFov(70);
+        music.pause();
       }
       $('#level').text('Level ' + level);
       gameState = 'play';

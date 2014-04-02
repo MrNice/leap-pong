@@ -16,7 +16,7 @@ var createPaddleMesh = function(sizeArray, color, coords) {
 
 var createBallMesh = function(radius, vertslices, horizslices, color) {
   var g = new THREE.SphereGeometry(radius, vertslices, horizslices);
-  var ball = new THREE.Mesh(g, new THREE.MeshBasicMaterial({map: ballTexture}));
+  var ball = new THREE.Mesh(g, new THREE.MeshLambertMaterial({map: ballTexture}));
   ball.position.set(0,0,0);
   ball.rotation.set(0, -(Math.PI/2), 0);
   return ball;
@@ -140,4 +140,31 @@ var rotateBall = function() {
     ballMesh.rotation.y += ballRotationY;
     ballMesh.rotation.z += ballRotationZ;
   }
+};
+
+var volumeInit = function() {
+    // var ctx = new webkitAudioContext()
+    // , url = '//kevincennis.com/sound/loudpipes.mp3'  
+    // , audio = new Audio(url)
+    // // 2048 sample buffer, 1 channel in, 1 channel out  
+    // , processor = ctx.createJavaScriptNode(2048, 1, 1)
+    // , meter = document.getElementById('meter')
+    // , source;
+
+//       audio.addEventListener('canplaythrough', function(){
+//     source = ctx.createMediaElementSource(audio)
+//     source.connect(processor)
+//     source.connect(ctx.destination)
+//     processor.connect(ctx.destination)
+//     audio.play()
+//   }, false);
+//   processor.onaudioprocess = function(evt){
+// var input = evt.inputBuffer.getChannelData(0)
+//   , len = input.length   
+//   , total = i = 0
+//   , rms;
+//   while ( i < len ) total += Math.abs( input[i++] )
+//   rms = Math.sqrt( total / len )
+//   volume = rms;
+// };
 };

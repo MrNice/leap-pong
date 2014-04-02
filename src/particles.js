@@ -8,7 +8,7 @@ var group, text, plane;
 var speed = 50;
 
 var initParticles = function(){
-  pointLight = new THREE.PointLight( 0xffffff, 2, 300 );
+  pointLight = new THREE.PointLight( 0xffffff, 2, 150 );
   pointLight.position.set( 0, 0, 0 );
   scene.add( pointLight );
   group = new THREE.Object3D();
@@ -149,17 +149,17 @@ var initParticles = function(){
 
   // Heart
 
-  var x = 0, y = 0;
+  var x = 0, y = 70;
 
   heartShape = new THREE.Shape();
 
-  heartShape.moveTo( x + 25, y + 25 );
-  heartShape.bezierCurveTo( x + 25, y + 25, x + 20, y, x, y );
-  heartShape.bezierCurveTo( x - 30, y, x - 30, y + 35,x - 30,y + 35 );
-  heartShape.bezierCurveTo( x - 30, y + 55, x - 10, y + 77, x + 25, y + 95 );
-  heartShape.bezierCurveTo( x + 60, y + 77, x + 80, y + 55, x + 80, y + 35 );
-  heartShape.bezierCurveTo( x + 80, y + 35, x + 80, y, x + 50, y );
-  heartShape.bezierCurveTo( x + 35, y, x + 25, y + 25, x + 25, y + 25 );
+  heartShape.moveTo( x + 2, y + 2 );
+  heartShape.bezierCurveTo( x + 2, y + 2, x + 2, y, x, y );
+  heartShape.bezierCurveTo( x - 3, y, x - 3, y + 3,x - 3,y + 3 );
+  heartShape.bezierCurveTo( x - 3, y + 5, x - 1, y + 7, x + 2, y + 9 );
+  heartShape.bezierCurveTo( x + 6, y + 7, x + 8, y + 5, x + 8, y + 3 );
+  heartShape.bezierCurveTo( x + 8, y + 3, x + 8, y, x + 5, y );
+  heartShape.bezierCurveTo( x + 3, y, x + 2, y + 2, x + 2, y + 2 );
 
 
   var hue = 0;
@@ -205,8 +205,8 @@ var initParticles = function(){
       // emitterpos.y = 0;
 
       // pointLight.position.copy( emitterpos );
-      pointLight.position.x = emitterpos.x;
-      pointLight.position.y = emitterpos.y;
+      pointLight.position.x = ballMesh.position.x;
+      pointLight.position.y = ballMesh.position.y;
       pointLight.position.z = 10;
 
       particles.vertices[ target ] = p.position;
@@ -257,9 +257,9 @@ var initParticles = function(){
   // TOTRY Set velocity to move away from centroid
 
   sparksEmitter.addAction( new SPARKS.Age() );
-  sparksEmitter.addAction( new SPARKS.Accelerate( 0, 0, 0 ) );
+  sparksEmitter.addAction( new SPARKS.Accelerate( 0, 0, 2 ) );
   sparksEmitter.addAction( new SPARKS.Move() );
-  sparksEmitter.addAction( new SPARKS.RandomDrift( 1, 1, 1 ) );
+  sparksEmitter.addAction( new SPARKS.RandomDrift( 1, 1, 5 ) );
 
 
   sparksEmitter.addCallback( "created", onParticleCreated );
