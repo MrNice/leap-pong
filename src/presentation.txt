@@ -1,0 +1,16 @@
+// Presentation
+
+Enable sound
+
+Hey everyone, I made Pong
+The Ai is pretty smart, but not infallible.
+
+I can also control it like this 
+
+I can't beat it in less then a minute, so I've disabled it here
+
+See, everything is 3d
+
+And I added directional music.
+
+I spent around 6 hours trying to get the particle system to work the way I wanted. Totally failed
