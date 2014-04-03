@@ -38,7 +38,7 @@ var camera,
     gameState   = 'initialize',
     cpuDisabled = false,
     // ballRadius  = 0.25, // Perfect
-    ballRadius = 0.35,
+    ballRadius = 0.4,
     playerDims  = [0.3, 1.2, 0.4], // Same as cpu for now
     cpuDims     = [0.3, 1.2, 0.4], // Same as player for now
     playerColor = 0x0055ff,
