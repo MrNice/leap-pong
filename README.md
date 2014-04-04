@@ -14,3 +14,6 @@ python -m SimpleHTTPServer
 Then point your browser to localhost:8000 in order to play.
 
 I made this @HackReactor's two day hackathon. Because of the way I structured it, I'm having trouble deploying it on Windows Azure (where I have credits).
+
+Level 3 music:
+Focus, by Chipzel, from Super Hexagon (which you should buy)
