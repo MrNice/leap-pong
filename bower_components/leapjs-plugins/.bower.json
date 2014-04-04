@@ -1,0 +1,15 @@
+{
+  "name": "leapjs-plugins",
+  "homepage": "https://github.com/leapmotion/leapjs-plugins",
+  "version": "0.1.3",
+  "_release": "0.1.3",
+  "_resolution": {
+    "type": "version",
+    "tag": "v0.1.3",
+    "commit": "f14068df38eca8b01d10040b499e8c910522bab9"
+  },
+  "_source": "git://github.com/leapmotion/leapjs-plugins.git",
+  "_target": "~0.1.3",
+  "_originalSource": "leapjs-plugins",
+  "_direct": true
+}
