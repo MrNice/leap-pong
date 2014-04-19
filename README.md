@@ -1,3 +1,5 @@
+### Update: You can now play it at
+#### <http://mrnice.github.io/leap-pong/>
 Hey everyone, you should play some pong!
 
 To Play:
